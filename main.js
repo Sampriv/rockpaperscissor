@@ -1,4 +1,10 @@
-console.log("Hello World");
+/*
+ask user for input of their choice, maybe do some error correction
+output is score and whether they won or lost the round
+
+keep track of score do comparisons using just strings
+write the logic flat out for who wins which, no efficiencies here.
+*/
 
 function getComputerChoice() {
     const choices = ["rock", "paper", "scissors"]
@@ -48,7 +54,7 @@ function playRound(humanChoice, computerChoice) {
     }
 }
 
-function playGame {
+function playGame() {
     playRound(humanSelection, computerSelection)
     playRound(humanSelection, computerSelection)
     playRound(humanSelection, computerSelection)
