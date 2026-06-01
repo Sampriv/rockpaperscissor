@@ -10,8 +10,6 @@ function getHumanChoice() {
     return(prompt("Please choose rock, paper or scissors."))
 }
 
-console.log(getHumanChoice())
-
 const humanScore = 0;
 const computerScore = 0;
 
@@ -48,4 +46,12 @@ function playRound(humanChoice, computerChoice) {
     else {
         return "Same move, play again!"
     }
+}
+
+function playGame {
+    playRound(humanSelection, computerSelection)
+    playRound(humanSelection, computerSelection)
+    playRound(humanSelection, computerSelection)
+    playRound(humanSelection, computerSelection)
+    playRound(humanSelection, computerSelection)
 }
