@@ -1,63 +1,51 @@
-/*
-ask user for input of their choice, maybe do some error correction
-output is score and whether they won or lost the round
-
-keep track of score do comparisons using just strings
-write the logic flat out for who wins which, no efficiencies here.
-*/
+let humanScore = 0;
+let computerScore = 0;
 
 function getComputerChoice() {
-    const choices = ["rock", "paper", "scissors"]
-    const index = (Math.random()*3)
-    return choices[Math.floor(index)]
+    const choices = ["rock", "paper", "scissors"];
+    return choices[Math.floor(Math.random() * 3)];
 }
 
 function getHumanChoice() {
-    return(prompt("Please choose rock, paper or scissors."))
+    return prompt("Please choose rock, paper or scissors.");
 }
 
-const humanScore = 0;
-const computerScore = 0;
-
-const humanSelection = getHumanChoice();
-const computerSelection = getComputerChoice();
-
 function playRound(humanChoice, computerChoice) {
-    humanChoice = humanChoice.lower();
-    computerChoice = computerChoice.lower();
-    if (humanChoice == "rock" && computerChoice == "paper") {
-        return "You lose! Paper beats rock";
-        computerScore++;
+    if (!humanChoice || !computerChoice) return "Invalid input";
+    humanChoice = humanChoice.toLowerCase();
+    computerChoice = computerChoice.toLowerCase();
+
+    if (humanChoice === computerChoice) {
+        return "Same move, play again!";
     }
-    else if (humanChoice == "paper" && computerChoice == "rock") {
-        return "You win! Paper beats rock";
+
+    const wins = {
+        rock: "scissors",
+        paper: "rock",
+        scissors: "paper"
+    };
+
+    if (wins[humanChoice] === computerChoice) {
         humanScore++;
-    }
-    else if (humanChoice == "rock" && computerChoice == "scissors") {
-        return "You win! Rock beats scissors";
-        humanScore++;
-    }
-    else if (humanChoice == "paper" && computerChoice == "scissors") {
-        return "You lose! Scissors beats paper";
+        return `You win! ${humanChoice} beats ${computerChoice}`;
+    } else {
         computerScore++;
-    }
-    else if (humanChoice == "scissors" && computerChoice == "paper") {
-        return "You Win! Scissors beats paper";
-        humanScore++;
-    }
-    else if (humanChoice == "scissors" && computerChoice == "rock") {
-        return "You win! Rock beats scissors";
-        computerScore++;
-    }
-    else {
-        return "Same move, play again!"
+        return `You lose! ${computerChoice} beats ${humanChoice}`;
     }
 }
 
 function playGame() {
-    playRound(humanSelection, computerSelection)
-    playRound(humanSelection, computerSelection)
-    playRound(humanSelection, computerSelection)
-    playRound(humanSelection, computerSelection)
-    playRound(humanSelection, computerSelection)
+    for (let i = 0; i < 5; i++) {
+        const humanSelection = getHumanChoice();
+        const computerSelection = getComputerChoice();
+        console.log(playRound(humanSelection, computerSelection));
+    }
+    console.log(`Final Score: Human ${humanScore}, Computer ${computerScore}`);
 }
+
+// Minimal Tests
+console.assert(["rock", "paper", "scissors"].includes(getComputerChoice()), "getComputerChoice failed");
+console.assert(playRound("rock", "scissors").includes("win"), "playRound win failed");
+console.assert(playRound("rock", "paper").includes("lose"), "playRound loss failed");
+console.assert(playRound("rock", "rock").includes("Same move"), "playRound tie failed");
+console.log("Tests completed.");
