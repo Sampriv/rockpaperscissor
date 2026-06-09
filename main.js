@@ -43,6 +43,14 @@ function playGame() {
     console.log(`Final Score: Human ${humanScore}, Computer ${computerScore}`);
 }
 
+console.assert(["rock", "paper", "scissors"].includes(getComputerChoice()), "getComputerChoice failed");
+console.assert(playRound("rock", "scissors").includes("win"), "playRound win failed");
+console.assert(playRound("rock", "paper").includes("lose"), "playRound loss failed");
+console.assert(playRound("rock", "rock").includes("Same move"), "playRound tie failed");
+humanScore = 0;
+computerScore = 0;
+console.log("Tests completed.");
+
 const result = document.querySelector("#result");
 const score = document.querySelector("#score");
 
