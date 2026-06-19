@@ -1,62 +1,81 @@
+const WINNING_SCORE = 5;
+const choices = ["rock", "paper", "scissors"];
+const wins = {
+    rock: "scissors",
+    paper: "rock",
+    scissors: "paper"
+};
+
+const result = document.querySelector("#result");
+const score = document.querySelector("#score");
+const status = document.querySelector("#status");
+const reset = document.querySelector("#reset");
+const choiceButtons = document.querySelectorAll("[data-choice]");
+
 let humanScore = 0;
 let computerScore = 0;
 
 function getComputerChoice() {
-    const choices = ["rock", "paper", "scissors"];
-    return choices[Math.floor(Math.random() * 3)];
+    return choices[Math.floor(Math.random() * choices.length)];
 }
 
-function getHumanChoice() {
-    return prompt("Please choose rock, paper or scissors.");
+function capitalize(choice) {
+    return choice.charAt(0).toUpperCase() + choice.slice(1);
 }
 
 function playRound(humanChoice, computerChoice) {
-    if (!humanChoice || !computerChoice) return "Invalid input";
-    humanChoice = humanChoice.toLowerCase();
-    computerChoice = computerChoice.toLowerCase();
-
     if (humanChoice === computerChoice) {
-        return "Same move, play again!";
+        return `Tie! You both chose ${humanChoice}.`;
     }
-
-    const wins = {
-        rock: "scissors",
-        paper: "rock",
-        scissors: "paper"
-    };
 
     if (wins[humanChoice] === computerChoice) {
         humanScore++;
-        return `You win! ${humanChoice} beats ${computerChoice}`;
-    } else {
-        computerScore++;
-        return `You lose! ${computerChoice} beats ${humanChoice}`;
+        return `You win the round! ${capitalize(humanChoice)} beats ${computerChoice}.`;
     }
+
+    computerScore++;
+    return `You lose the round. ${capitalize(computerChoice)} beats ${humanChoice}.`;
 }
 
-function playGame() {
-    for (let i = 0; i < 5; i++) {
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        console.log(playRound(humanSelection, computerSelection));
-    }
-    console.log(`Final Score: Human ${humanScore}, Computer ${computerScore}`);
+function updateScore() {
+    score.textContent = `Human: ${humanScore} | Computer: ${computerScore}`;
 }
 
-console.assert(["rock", "paper", "scissors"].includes(getComputerChoice()), "getComputerChoice failed");
-console.assert(playRound("rock", "scissors").includes("win"), "playRound win failed");
-console.assert(playRound("rock", "paper").includes("lose"), "playRound loss failed");
-console.assert(playRound("rock", "rock").includes("Same move"), "playRound tie failed");
-humanScore = 0;
-computerScore = 0;
-console.log("Tests completed.");
+function finishGameIfNeeded() {
+    if (humanScore < WINNING_SCORE && computerScore < WINNING_SCORE) return;
 
-const result = document.querySelector("#result");
-const score = document.querySelector("#score");
+    status.textContent = humanScore === WINNING_SCORE
+        ? "You won the game!"
+        : "The computer won the game.";
 
-document.querySelectorAll("button").forEach((button) => {
-    button.addEventListener("click", () => {
-        result.textContent = playRound(button.textContent, getComputerChoice());
-        score.textContent = `Human: ${humanScore} | Computer: ${computerScore}`;
+    choiceButtons.forEach((button) => {
+        button.disabled = true;
     });
+}
+
+function handleChoice(event) {
+    const humanChoice = event.currentTarget.dataset.choice;
+    const computerChoice = getComputerChoice();
+
+    result.textContent = playRound(humanChoice, computerChoice);
+    updateScore();
+    finishGameIfNeeded();
+}
+
+function resetGame() {
+    humanScore = 0;
+    computerScore = 0;
+    result.textContent = "Choose a move.";
+    status.textContent = "";
+    updateScore();
+
+    choiceButtons.forEach((button) => {
+        button.disabled = false;
+    });
+}
+
+choiceButtons.forEach((button) => {
+    button.addEventListener("click", handleChoice);
 });
+
+reset.addEventListener("click", resetGame);
